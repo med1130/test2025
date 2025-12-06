@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إعلان التصحيح النموذجي للامتحان</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* 1. تصميم الواجهة والخلفية */
+        body {
+            background-color: #121212; /* خلفية داكنة جدًا */
+            color: #E0E0E0; /* لون نص فاتح */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            flex-direction: column;
+            overflow: hidden; /* لمنع ظهور أشرطة التمرير */
+        }
+
+        .container {
+            max-width: 90%;
+            padding: 40px;
+            border-radius: 15px;
+            background: #1e1e1e; /* خلفية أغمق للعداد */
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1), /* ظل خفيف بلون الإضاءة */
+                        0 0 5px rgba(0, 255, 255, 0.05);
+            transition: all 0.5s ease-in-out;
+        }
+
+        /* 2. تصميم رسالة الإعلان */
+        .message h1 {
+            color: #00FFD1; /* لون أزرق كهربائي فاتح */
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5); /* تأثير نيون خفيف */
+        }
+
+        .message p {
+            font-size: 1.2em;
+            color: #B0B0B0;
+            margin-top: 5px;
+            margin-bottom: 40px;
+        }
+
+        /* 3. تصميم العداد (7-Segment Effect) */
+        #countdown {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .time-unit {
+            font-family: 'Share Tech Mono', monospace; /* خط رقمي يشبه 7-Segment */
+            font-size: 5em;
+            background: #000000; /* خلفية سوداء للوحدة */
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: #00FFD1; /* اللون المضيء للعداد (Cyan/Electric Blue) */
+            text-shadow: 0 0 15px #00FFD1, /* إضاءة قوية (النيون) */
+                         0 0 25px #00FFFF;
+            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.3); /* ظل داخلي لإعطاء عمق */
+            line-height: 1;
+            min-width: 120px;
+        }
+
+        .label {
+            display: block;
+            font-size: 0.9em;
+            margin-top: 10px;
+            color: #707070;
+            text-transform: uppercase;
+        }
+
+        /* 4. تصميم زر الحل (Post-Countdown) */
+        .btn-solution {
+            background-color: #00FFD1; /* لون الزر مطابق للعداد */
+            color: #121212;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            font-weight: bold;
+            text-decoration: none; /* لإزالة التسطير من الرابط */
+            display: inline-block;
+        }
+
+        .btn-solution:hover {
+            background-color: #00E0B1;
+            transform: translateY(-2px); /* تأثير الرفع عند التحويم */
+            box-shadow: 0 5px 15px rgba(0, 255, 209, 0.4); /* ظل أكثر قوة */
+        }
+
+        /* 5. إخفاء وإظهار الواجهات */
+        #post-countdown-view {
+            display: none; /* إخفاء الواجهة الثانية افتراضياً */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="countdown-view">
+        <div class="message">
+            <h1>إعلان التصحيح النموذجي</h1>
+            <p>الاختبار مبرمج يوم **الثلاثاء 9 ديسمبر 2025**</p>
+            <p>سيتم نشر التصحيح النموذجي على **الساعة 10:00**</p>
+        </div>
+
+        <div id="countdown">
+            <div class="unit-group">
+                <span class="time-unit" id="days">00</span>
+                <span class="label">يوم</span>
+            </div>
+            <div class="unit-group">
+                <span class="time-unit" id="hours">00</span>
+                <span class="label">ساعة</span>
+            </div>
+            <div class="unit-group">
+                <span class="time-unit" id="minutes">00</span>
+                <span class="label">دقيقة</span>
+            </div>
+            <div class="unit-group">
+                <span class="time-unit" id="seconds">00</span>
+                <span class="label">ثانية</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="post-countdown-view">
+        <div class="message">
+            <h1>تم نشر التصحيح النموذجي! ✅</h1>
+            <p>تهانينا! لقد وصل وقت عرض الحل. اضغط على الزر أدناه للانتقال إلى ملف الحل الكامل.</p>
+        </div>
+        <a href="PLACEHOLDER_GOOGLE_DRIVE_LINK" target="_blank" class="btn-solution">
+            الحصول على الحل (Google Drive)
+        </a>
+    </div>
+
+    <script>
+        // التاريخ والوقت المستهدف (الثلاثاء 9 ديسمبر 2025 على الساعة 10:00:00)
+        // **ملاحظة:** يفضل التأكد من توقيت المنطقة الزمنية. هذا الكود يستخدم التوقيت المحلي للمتصفح.
+        const targetDate = new Date("December 9, 2025 10:00:00").getTime();
+
+        const countdownView = document.getElementById('countdown-view');
+        const postCountdownView = document.getElementById('post-countdown-view');
+
+        // جلب عناصر العداد
+        const daysElement = document.getElementById('days');
+        const hoursElement = document.getElementById('hours');
+        const minutesElement = document.getElementById('minutes');
+        const secondsElement = document.getElementById('seconds');
+
+        function updateCountdown() {
+            // جلب الوقت الحالي
+            const now = new Date().getTime();
+
+            // حساب الفرق الزمني بالملي ثانية
+            const distance = targetDate - now;
+
+            // إذا انتهى العد التنازلي
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                countdownView.style.display = 'none';
+                postCountdownView.style.display = 'block';
+                return;
+            }
+
+            // حساب الأيام، الساعات، الدقائق، والثواني
+            const oneSecond = 1000;
+            const oneMinute = oneSecond * 60;
+            const oneHour = oneMinute * 60;
+            const oneDay = oneHour * 24;
+
+            const days = Math.floor(distance / oneDay);
+            const hours = Math.floor((distance % oneDay) / oneHour);
+            const minutes = Math.floor((distance % oneHour) / oneMinute);
+            const seconds = Math.floor((distance % oneMinute) / oneSecond);
+
+            // دالة لتنسيق الأرقام بـ 00
+            const formatTime = (num) => String(num).padStart(2, '0');
+
+            // تحديث العرض
+            daysElement.textContent = formatTime(days);
+            hoursElement.textContent = formatTime(hours);
+            minutesElement.textContent = formatTime(minutes);
+            secondsElement.textContent = formatTime(seconds);
+        }
+
+        // تحديث العداد كل ثانية
+        const countdownInterval = setInterval(updateCountdown, 1000);
+
+        // تشغيل التحديث مرة واحدة فوراً عند تحميل الصفحة لتجنب التأخير
+        updateCountdown();
+    </script>
+
+</body>
+</html>
