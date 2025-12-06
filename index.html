@@ -115,10 +115,6 @@
 
         <div id="countdown">
             <div class="unit-group">
-                <span class="time-unit" id="days">00</span>
-                <span class="label">يوم</span>
-            </div>
-            <div class="unit-group">
                 <span class="time-unit" id="hours">00</span>
                 <span class="label">ساعة</span>
             </div>
@@ -145,24 +141,19 @@
 
     <script>
         // التاريخ والوقت المستهدف (الثلاثاء 9 ديسمبر 2025 على الساعة 10:00:00)
-        // **ملاحظة:** يفضل التأكد من توقيت المنطقة الزمنية. هذا الكود يستخدم التوقيت المحلي للمتصفح.
         const targetDate = new Date("December 9, 2025 10:00:00").getTime();
 
         const countdownView = document.getElementById('countdown-view');
         const postCountdownView = document.getElementById('post-countdown-view');
 
-        // جلب عناصر العداد
-        const daysElement = document.getElementById('days');
+        // جلب عناصر العداد المتبقية
         const hoursElement = document.getElementById('hours');
         const minutesElement = document.getElementById('minutes');
         const secondsElement = document.getElementById('seconds');
 
         function updateCountdown() {
-            // جلب الوقت الحالي
             const now = new Date().getTime();
-
-            // حساب الفرق الزمني بالملي ثانية
-            const distance = targetDate - now;
+            let distance = targetDate - now;
 
             // إذا انتهى العد التنازلي
             if (distance < 0) {
@@ -172,14 +163,14 @@
                 return;
             }
 
-            // حساب الأيام، الساعات، الدقائق، والثواني
+            // حساب الساعات، الدقائق، والثواني من إجمالي المسافة
             const oneSecond = 1000;
             const oneMinute = oneSecond * 60;
             const oneHour = oneMinute * 60;
-            const oneDay = oneHour * 24;
 
-            const days = Math.floor(distance / oneDay);
-            const hours = Math.floor((distance % oneDay) / oneHour);
+            // هنا يكمن التغيير: لم نعد نحسب الأيام بشكل منفصل، بل نحسب إجمالي الساعات
+            // Total Hours: إجمالي الساعات في الفترة المتبقية (بما في ذلك الأيام)
+            const totalHours = Math.floor(distance / oneHour);
             const minutes = Math.floor((distance % oneHour) / oneMinute);
             const seconds = Math.floor((distance % oneMinute) / oneSecond);
 
@@ -187,8 +178,8 @@
             const formatTime = (num) => String(num).padStart(2, '0');
 
             // تحديث العرض
-            daysElement.textContent = formatTime(days);
-            hoursElement.textContent = formatTime(hours);
+            // نستخدم 'totalHours' لتضمين الأيام في خانة الساعات
+            hoursElement.textContent = formatTime(totalHours);
             minutesElement.textContent = formatTime(minutes);
             secondsElement.textContent = formatTime(seconds);
         }
@@ -196,7 +187,7 @@
         // تحديث العداد كل ثانية
         const countdownInterval = setInterval(updateCountdown, 1000);
 
-        // تشغيل التحديث مرة واحدة فوراً عند تحميل الصفحة لتجنب التأخير
+        // تشغيل التحديث مرة واحدة فوراً
         updateCountdown();
     </script>
 
